@@ -1,0 +1,116 @@
+// 1. Create 
+curl -XPUT "http://localhost:9200/category/shop/1" -d'
+{
+    "category": "notebook",
+    "brand": "apple",
+    "name": "apple macbook",
+    "id": 1
+}'
+
+// 2. Update
+curl -XPUT "http://localhost:9200/category/shop/1" -d'
+{
+    "category": "notebook",
+    "brand": "apple",
+    "name": "apple macbook shop",
+    "products": [
+    	{"productId": "P00001"},
+    	{"productId": "P00002"},
+    	{"productId": "P00003"}
+    ],
+    "id": 1
+}'
+
+// 3. Get
+curl -XGET "http://localhost:9200/category/shop/1"
+
+// 4. Delete
+curl -XDELETE "http://localhost:9200/category/shop/1"
+
+// 5. Search
+(샘플 데이터 준비)
+curl -XPUT "http://localhost:9200/category/shop/1" -d'
+{
+    "category": "notebook",
+    "brand": "apple",
+    "name": "apple macbook shop",
+    "products": [
+        {"productId": "P00001"},
+        {"productId": "P00002"},
+        {"productId": "P00003"}
+    ],
+    "id": 1
+}'
+
+curl -XPUT "http://localhost:9200/category/shop/2" -d'
+{
+    "category": "notebook",
+    "brand": "sony",
+    "name": "Sony Via shop",
+    "products": [
+        {"productId": "P00011"},
+        {"productId": "P00012"},
+        {"productId": "P00013"}
+    ],
+    "id": 2
+}'
+
+curl -XPUT "http://localhost:9200/category/shop/3" -d'
+{
+    "category": "phone",
+    "brand": "apple",
+    "name": "iPhone shop",
+    "products": [
+        {"productId": "P00021"},
+        {"productId": "P00022"},
+        {"productId": "P00023"}
+    ],
+    "id": 3
+}'
+
+// query string query
+curl -XPOST "http://localhost:9200/_search" -d'
+{
+    "query": {
+        "query_string": {
+            "query": "apple"
+        }
+    }
+}'
+
+// query string query 결과 
+{"took":41,"timed_out":false,"_shards":{"total":5,"successful":5,"failed":0},"hits":{"total":2,"max_score":0.13561106,"hits":[{"_index":"category","_type":"shop","_id":"1","_score":0.13561106, "_source" : 
+{
+    "category": "notebook",
+    "brand": "apple",
+    "name": "apple macbook shop",
+    "products": [
+        {"productId": "P00001"},
+        {"productId": "P00002"},
+        {"productId": "P00003"}
+    ],
+    "id": 1
+}},{"_index":"category","_type":"shop","_id":"3","_score":0.095891505, "_source" : 
+{
+    "category": "phone",
+    "brand": "apple",
+    "name": "iPhone shop",
+    "products": [
+        {"productId": "P00021"},
+        {"productId": "P00022"},
+        {"productId": "P00023"}
+    ],
+    "id": 3
+}}]}}
+
+
+// query string query
+curl -XPOST "http://localhost:9200/_search" -d'
+{
+    "query": {
+        "query_string": {
+            "query": "apple",
+            "fields": ["name"]
+        }
+    }
+}'
